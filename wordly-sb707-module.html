@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wordly — SB 707 Compliance Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #017CFF;
+    --blue-dark: #0060CC;
+    --blue-50: #F0F6FF;
+    --blue-100: #E0EDFF;
+    --blue-200: #C5DEFF;
+    --orange: #CD5500;
+    --orange-soft: rgba(205, 85, 0, 0.18);
+    --orange-softer: rgba(205, 85, 0, 0.08);
+    --navy: #0A1628;
+    --navy-soft: #1C2E4A;
+    --text: #1A2B47;
+    --text-soft: #5A6B85;
+    --gray-100: #F4F7FB;
+    --gray-200: #E5EBF4;
+    --gray-300: #D1DCF0;
+    --white: #FFFFFF;
+    --green: #22C55E;
+    --green-50: #DCFCE7;
+    --green-700: #166534;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ─── COUNTDOWN HERO ─── */
+  .countdown-hero {
+    background:
+      radial-gradient(ellipse at top right, rgba(1,124,255,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left, rgba(1,124,255,0.06) 0%, transparent 60%),
+      linear-gradient(180deg, var(--blue-50) 0%, var(--white) 100%);
+    padding: 56px 40px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .deadline-label {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .countdown-headline {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 36px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .countdown-headline strong {
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .timer-grid {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .timer-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .timer-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 60px;
+    font-weight: 500;
+    color: var(--blue);
+    line-height: 1;
+    background: var(--white);
+    border: 1px solid var(--blue-200);
+    border-radius: 10px;
+    padding: 16px 22px;
+    min-width: 120px;
+    text-align: center;
+    letter-spacing: -2px;
+    box-shadow: 0 2px 10px rgba(1,124,255,0.06);
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .timer-unit.urgent .timer-value {
+    color: #DC2626;
+    border-color: #FCA5A5;
+    background: #FEF2F2;
+  }
+
+  .timer-label {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+
+  .timer-sep {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 48px;
+    color: var(--blue-200);
+    padding-bottom: 28px;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .deadline-note {
+    font-size: 14px;
+    color: var(--text-soft);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  .deadline-note strong {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* ─── STATUS BAR ─── */
+  .status-bar {
+    background: var(--blue-50);
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--blue-100);
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .status-item strong { color: var(--navy); font-weight: 700; }
+
+  .status-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-done { background: var(--gray-300); }
+  .dot-now  { background: var(--orange); box-shadow: 0 0 0 4px var(--orange-soft); animation: pulse 2s ease-in-out infinite; }
+  .dot-soon { background: var(--navy-soft); }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px var(--orange-soft); }
+    50%      { box-shadow: 0 0 0 8px var(--orange-softer); }
+  }
+
+  /* ─── SECTION ─── */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px 40px;
+  }
+
+  .section-title {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+
+  .section-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin-bottom: 28px;
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  /* ─── SUPPORT CARDS ─── */
+  .support-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .support-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 22px 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .support-card:hover {
+    border-color: var(--blue-200);
+    box-shadow: 0 4px 16px rgba(1,124,255,0.06);
+  }
+
+  .support-card-icon {
+    width: 36px; height: 36px;
+    background: var(--blue-50);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    font-size: 18px;
+  }
+
+  .support-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .support-card-body {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.55;
+  }
+
+  /* ─── LEGAL FOOTNOTE ─── */
+  .legal-note {
+    max-width: 960px;
+    margin: 24px auto 0;
+    padding: 0 40px 48px;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 700px) {
+    .countdown-hero { padding: 40px 20px 32px; }
+    .countdown-headline { font-size: 22px; }
+    .timer-value { font-size: 36px; min-width: 76px; padding: 12px 14px; }
+    .timer-sep { font-size: 28px; padding-bottom: 22px; }
+    .section { padding: 36px 20px 24px; }
+    .legal-note { padding: 0 20px 36px; }
+    .support-grid { grid-template-columns: 1fr; }
+    .status-bar { padding: 14px 20px; gap: 16px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUNTDOWN HERO -->
+<div class="countdown-hero">
+  <div class="deadline-label">California Brown Act Amendment</div>
+  <div class="countdown-headline">Enhanced Language Access Requirements Take Effect<br><strong>July 1, 2026</strong></div>
+
+  <div class="timer-grid">
+    <div class="timer-unit" id="unit-days">
+      <div class="timer-value" id="days">--</div>
+      <div class="timer-label">Days</div>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-unit">
+      <div class="timer-value" id="hours">--</div>
+      <div class="timer-label">Hours</div>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-unit">
+      <div class="timer-value" id="minutes">--</div>
+      <div class="timer-label">Minutes</div>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-unit">
+      <div class="timer-value" id="seconds">--</div>
+      <div class="timer-label">Seconds</div>
+    </div>
+  </div>
+
+  <div class="deadline-note">
+    <strong>Eligible legislative bodies</strong> (cities, counties, and special districts serving populations of 250,000 or more) must have live captioning, translated agendas, and two-way remote participation in place.
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-item">
+    <div class="status-dot dot-done"></div>
+    Jan 1, 2026: General hybrid requirements effective
+  </div>
+  <div class="status-item">
+    <div class="status-dot dot-now"></div>
+    <strong>Now: Planning &amp; procurement window</strong>
+  </div>
+  <div class="status-item">
+    <div class="status-dot dot-soon"></div>
+    Jul 1, 2026: Enhanced language access required
+  </div>
+</div>
+
+<!-- WHAT WORDLY SUPPORTS -->
+<div class="section">
+  <div class="section-title">How Wordly Helps</div>
+  <div class="section-heading">Wordly Supports Your SB 707 Compliance</div>
+  <div class="section-sub">Six ways Wordly helps your agency meet the language access, captioning, and hybrid participation requirements of SB 707.</div>
+
+  <div class="support-grid">
+
+    <div class="support-card">
+      <div class="support-card-icon">🔤</div>
+      <div class="support-card-title">Real-Time Live Captions</div>
+      <div class="support-card-body">AI-powered captions during in-person, hybrid, and virtual meetings. Attendees access on their own device via QR code, no app download required. Satisfies SB 707's real-time subtitling requirement.</div>
+    </div>
+
+    <div class="support-card">
+      <div class="support-card-icon">🌐</div>
+      <div class="support-card-title">Live Translation in 60+ Languages</div>
+      <div class="support-card-body">Simultaneous audio and text translation for limited English proficient (LEP) residents. Covers the applicable languages defined under §54953.4, including Spanish, Chinese, Tagalog, Vietnamese, and more.</div>
+    </div>
+
+    <div class="support-card">
+      <div class="support-card-icon">📄</div>
+      <div class="support-card-title">Multilingual Meeting Instructions</div>
+      <div class="support-card-body">Pre-built, translated instructions for how residents access live translation at your meetings, ready to distribute alongside your translated agenda.</div>
+    </div>
+
+    <div class="support-card">
+      <div class="support-card-icon">🔗</div>
+      <div class="support-card-title">Platform Integrations</div>
+      <div class="support-card-body">Native integrations with Zoom, Webex, Microsoft Teams, and Cvent. Wordly layers onto your existing hybrid meeting setup, no rip and replace required.</div>
+    </div>
+
+    <div class="support-card">
+      <div class="support-card-icon">📝</div>
+      <div class="support-card-title">Auto-Generated Transcripts</div>
+      <div class="support-card-body">Full meeting transcripts and summaries in multiple languages, automatically generated post-meeting. Supports public records obligations and accessibility for those who could not attend live.</div>
+    </div>
+
+    <div class="support-card">
+      <div class="support-card-icon">🏛️</div>
+      <div class="support-card-title">In-Room &amp; Hybrid Display</div>
+      <div class="support-card-body">Project live captions and translations to in-chamber screens, livestream broadcasts, and remote attendees simultaneously. One workflow covers in-person, hybrid, and virtual participation.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="legal-note">
+  Wordly supports key SB 707 requirements but is not a complete compliance solution. Consult your legal counsel to confirm your agency's full compliance posture.
+</div>
+
+<script>
+  function updateCountdown() {
+    const target = new Date('2026-07-01T00:00:00');
+    const now = new Date();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      document.getElementById('days').textContent    = '00';
+      document.getElementById('hours').textContent   = '00';
+      document.getElementById('minutes').textContent = '00';
+      document.getElementById('seconds').textContent = '00';
+      return;
+    }
+
+    const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent    = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent   = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+    if (days < 14) {
+      document.getElementById('unit-days').classList.add('urgent');
+    }
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+
+</body>
+</html>
